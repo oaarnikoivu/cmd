@@ -9,8 +9,8 @@ clean:
 	pipenv --rm 
 
 lint:
-	pipenv run black cmd/
+	pipenv run black app/
 	pipenv run flake8
 
 run:
-	pipenv run uvicorn cmd.main:app --reload --host $(HOST) --port $(PORT)
+	pipenv run uvicorn app.main:app --reload --host $(HOST) --port $(PORT)
