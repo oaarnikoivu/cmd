@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal, engine
@@ -45,6 +45,31 @@ def read_command(command_id: int, db: Session = Depends(get_db)):
     return db_command
 
 
+@app.put("/commands/{command_id}/", include_in_schema=False)
+@app.put("/commands/{command_id}")
+def update_command(command_id: int, command: str, db: Session = Depends(get_db)):
+    old_command = db.query(models.Command).filter(models.Command.id == command_id)
+    if not old_command.first():
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Command with the id {command_id} is not available"
+        )
+    old_command.update({"command": command})
+    db.commit()
+    return "Success"
+
+
+@app.delete("/commands/{command_id}/", include_in_schema=False)
+@app.delete("/commands/{command_id}")
+def delete_command(command_id: int, db: Session = Depends(get_db)):
+    try:
+        db.query(models.Command).filter(models.Command.id == command_id).delete()
+        db.query(models.Tag).filter(models.Tag.command_id == command_id).delete()
+        db.commit()
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{str(e)}")
+    return
+
+
 @app.post("/commands/{command_id}/tags/", include_in_schema=False)
 @app.post("/commands/{command_id}/tags", response_model=schemas.Tag)
 def create_tag_for_command(command_id: int, tag: schemas.TagCreate, db: Session = Depends(get_db)):
@@ -56,6 +81,31 @@ def create_tag_for_command(command_id: int, tag: schemas.TagCreate, db: Session 
 def read_tags(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     tags = crud.get_tags(db, skip=skip, limit=limit)
     return tags
+
+
+@app.put("/commands/{command_id}/tags/{tag_id}/", include_in_schema=False)
+@app.put("/commands/{command_id}/tags/{tag_id}")
+def update_tag(command_id: int, tag_id: int, tag: str, db: Session = Depends(get_db)):
+    tags = db.query(models.Tag).filter(models.Tag.command_id == command_id)
+    if not tags.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Tags not found for command {command_id}")
+    old_tag = tags.filter(models.Tag.id == tag_id)
+    if not old_tag.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Tag not found for the id {tag_id}")
+    old_tag.update({"tag": tag})
+    db.commit()
+    return "Success"
+
+
+@app.delete("/commands/{command_id}/tags/{tag_id}/", include_in_schema=False)
+@app.delete("/commands/{command_id}/tags/{tag_id}")
+def delete_tag(command_id: int, tag_id: int, db: Session = Depends(get_db)):
+    try:
+        db.query(models.Tag).filter(models.Tag.command_id == command_id).filter(models.Tag.id == tag_id).delete()
+        db.commit()
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"{str(e)}")
+    return
 
 
 @app.get("/")
