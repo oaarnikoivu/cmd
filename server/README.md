@@ -4,4 +4,4 @@
 
     make prepare-dev
 
-    export PYTHONPATH=cmd/:$PYTHONPATH
+    export PYTHONPATH=app/:$PYTHONPATH

@@ -2,3 +2,4 @@ build/
 app.egg-info/
 *.db
 *.pyc
+.pytest_cache/
