@@ -1,3 +1,4 @@
+from http.client import responses
 import pytest
 
 from fastapi.testclient import TestClient
@@ -80,4 +81,67 @@ def test_delete_command(test_db):
     assert response.status_code == 200, response.text
     data = response.json()
 
+    assert data == []
+
+
+def test_create_tag(test_db):
+    response = client.post("/commands", json={"command": "docker run x"})
+    assert response.status_code == 200, response.text
+    data = response.json()
+    command_id = data["id"]
+
+    assert data["tags"] == []
+
+    response = client.post(f"/commands/{command_id}/tags", json={"tag": "docker"})
+    assert response.status_code == 200, response.text
+
+    response = client.get(f"/commands/{command_id}")
+    assert response.status_code == 200, response.text
+
+    data = response.json()
+    assert "tags" in data
+    assert data["tags"][0]["tag"] == "docker"
+
+
+def test_update_tag(test_db):
+    response = client.post("/commands", json={"command": "docker run x"})
+    assert response.status_code == 200, response.text
+    data = response.json()
+    command_id = data["id"]
+
+    response = client.post(f"/commands/{command_id}/tags", json={"tag": "docker"})
+    assert response.status_code == 200, response.text
+
+    data = response.json()
+    tag_id = data["id"]
+
+    response = client.put(f"/commands/{command_id}/tags/{tag_id}", params={"tag": "test"})
+    assert response.status_code == 200, response.text
+
+    response = client.get("/tags")
+    assert response.status_code == 200, response.text
+
+    data = response.json()
+    assert data[0]["tag"] == "test"
+
+
+def test_delete_tag(test_db):
+    response = client.post("/commands", json={"command": "docker run x"})
+    assert response.status_code == 200, response.text
+    data = response.json()
+    command_id = data["id"]
+
+    response = client.post(f"/commands/{command_id}/tags", json={"tag": "docker"})
+    assert response.status_code == 200, response.text
+
+    data = response.json()
+    tag_id = data["id"]
+
+    response = client.delete(f"/commands/{command_id}/tags/{tag_id}")
+    assert response.status_code == 200, response.text
+
+    response = client.get("/tags")
+    assert response.status_code == 200, response.text
+
+    data = response.json()
     assert data == []
