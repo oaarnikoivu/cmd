@@ -17,6 +17,7 @@ app.add_middleware(
     CORSMiddleware, allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"]
 )
 
+
 # Deps
 def get_db():
     db = SessionLocal()
@@ -24,6 +25,22 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.post("/dirs/", include_in_schema=False)
+@app.post("/dirs", response_model=schemas.Directory)
+def mkdir(directory: schemas.DirectoryCreate, db: Session = Depends(get_db)):
+    db_directory = crud.get_directory_by_title(db, title=directory.title)
+    if db_directory:
+        raise HTTPException(status_code=400, detail="Directory already exists!")
+    return crud.create_directory(db=db, directory=directory)
+
+
+@app.get("/dirs/", include_in_schema=False)
+@app.get("/dirs", response_model=list[schemas.Directory])
+def ls(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    directories = crud.get_directories(db, skip=skip, limit=limit)
+    return directories
 
 
 @app.post("/commands/", include_in_schema=False)

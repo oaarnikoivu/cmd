@@ -31,3 +31,37 @@ class Command(CommandBase):
 
     class Config:
         orm_mode = True
+
+
+class DirectoryBase(BaseModel):
+    title: str
+
+
+class DirectoryCreate(DirectoryBase):
+    pass
+
+
+class Directory(DirectoryBase):
+    id: int
+    links: list = []
+
+    class Config:
+        orm_mode = True
+
+    tag: str
+
+
+class LinkBase(BaseModel):
+    url: str
+
+
+class LinkCreate(LinkBase):
+    pass
+
+
+class Link(LinkBase):
+    id: int
+    directory_id: int
+
+    class Config:
+        orm_mode = True

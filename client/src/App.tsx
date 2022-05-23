@@ -1,15 +1,10 @@
 import { Search } from "./components/Search/Search";
+import { Terminal } from "./components/Terminal/Terminal";
 
 function App() {
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "25%",
-      }}
-    >
-      <Search />
+    <div style={{ marginLeft: "20px", marginTop: "20px" }}>
+      <Terminal />
     </div>
   );
 }
