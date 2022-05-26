@@ -4,6 +4,7 @@ export enum Keywords {
   CD = "cd",
   CLEAR = "clear",
   OPEN = "open",
+  TOUCH = "touch",
   STATS = "stats",
   HELP = "help",
 }

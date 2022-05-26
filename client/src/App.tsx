@@ -9,6 +9,8 @@ interface Input {
   text: string;
 }
 
+const keywords: string[] = Object.values(Keywords);
+
 function App() {
   const arrowUpPressed = useKeyPress("ArrowUp");
   const arrowDownPressed = useKeyPress("ArrowDown");
@@ -17,28 +19,54 @@ function App() {
   const [input, setInput] = useState<Input[]>([
     { disabled: false, hasError: false, text: "" },
   ]);
+  const [clear, setClear] = useState<boolean>(false);
 
-  const keywords: string[] = Object.values(Keywords);
+  useEffect(() => {
+    input.forEach((_, i: number) => {
+      let currentDiv = document.getElementById(`id-${i}`);
+      if (i !== input.length - 1) {
+        currentDiv?.remove();
+      } else {
+        setInput((input: Input[]) =>
+          input.map((item: Input, i: number) => {
+            if (i === input.length - 1) {
+              item.text = "";
+            }
+            return item;
+          })
+        );
+      }
+      setClear(false);
+    });
+  }, [clear]);
 
   useEffect(() => {
     if (enterPressed) {
-      setInput((input: Input[]) =>
-        input.map((item: Input, i: number) => {
-          if (i === input.length - 1) {
-            item.disabled = true;
-          }
-          return item;
-        })
-      );
-      setInput((old: Input[]) => [
-        ...old,
-        {
-          disabled: false,
-          hasError: !keywords.includes(old[old.length - 1].text.split(" ")[0]),
-          text: "",
-        },
-      ]);
-      setIndex(input.length - 1 + 1);
+      let currentInput = input[input.length - 1];
+
+      if (currentInput.text === Keywords.CLEAR) {
+        setClear(true);
+      } else {
+        setInput((input: Input[]) =>
+          input.map((item: Input, i: number) => {
+            if (i === input.length - 1) {
+              item.disabled = true;
+            }
+            return item;
+          })
+        );
+        setInput((old: Input[]) => [
+          ...old,
+          {
+            disabled: false,
+            hasError: !keywords.includes(
+              old[old.length - 1].text.split(" ")[0]
+            ),
+            text: "",
+          },
+        ]);
+        setIndex(input.length - 1 + 1);
+      }
     }
   }, [enterPressed]);
 
@@ -78,7 +106,7 @@ function App() {
 
   const renderTerminal = (idx: number, item: Input) => {
     return (
-      <div key={idx}>
+      <div key={idx} id={`id-${idx}`}>
         <div
           style={{
             fontSize: 14,
