@@ -1,10 +1,15 @@
 import React from "react";
 interface TerminalProps {
-  onKeyPress: any;
-  onChange: any;
+  onChange: React.ChangeEventHandler;
+  value: string;
+  disabled: boolean;
 }
 
-export const Terminal: React.FC<TerminalProps> = ({ onKeyPress, onChange }) => {
+export const Terminal: React.FC<TerminalProps> = ({
+  value,
+  disabled,
+  onChange,
+}) => {
   return (
     <div
       style={{
@@ -17,12 +22,20 @@ export const Terminal: React.FC<TerminalProps> = ({ onKeyPress, onChange }) => {
       <div>/</div>
       <div style={{ width: "100%" }}>
         <input
+          ref={(ref) => ref && ref.focus()}
           autoFocus
+          disabled={disabled}
           style={{ border: "none", outline: "none", width: "100%" }}
           type="text"
           placeholder=""
+          value={value}
           onChange={onChange}
-          onKeyPress={onKeyPress}
+          onFocus={(e) =>
+            e.currentTarget.setSelectionRange(
+              e.currentTarget.value.length,
+              e.currentTarget.value.length
+            )
+          }
         />
       </div>
     </div>
