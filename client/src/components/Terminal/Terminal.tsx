@@ -2,6 +2,7 @@ import React from "react";
 interface TerminalProps {
   onChange: React.ChangeEventHandler;
   value: string;
+  hasError: boolean;
   disabled: boolean;
 }
 
@@ -25,7 +26,12 @@ export const Terminal: React.FC<TerminalProps> = ({
           ref={(ref) => ref && ref.focus()}
           autoFocus
           disabled={disabled}
-          style={{ border: "none", outline: "none", width: "100%" }}
+          style={{
+            border: "none",
+            outline: "none",
+            width: "100%",
+            fontSize: 14,
+          }}
           type="text"
           placeholder=""
           value={value}
