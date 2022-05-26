@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Terminal } from "./components/Terminal/Terminal";
 import { useKeyPress } from "./hooks/useKeyPress";
+import { Keywords } from "./utils/keywords";
 
 interface Input {
   disabled: boolean;
@@ -17,6 +18,8 @@ function App() {
     { disabled: false, hasError: false, text: "" },
   ]);
 
+  const keywords: string[] = Object.values(Keywords);
+
   useEffect(() => {
     if (enterPressed) {
       setInput((input: Input[]) =>
@@ -31,7 +34,7 @@ function App() {
         ...old,
         {
           disabled: false,
-          hasError: !old[old.length - 1].text.includes("mkdir"),
+          hasError: !keywords.includes(old[old.length - 1].text.split(" ")[0]),
           text: "",
         },
       ]);
@@ -75,8 +78,17 @@ function App() {
 
   const renderTerminal = (idx: number, item: Input) => {
     return (
-      <div>
-        <div style={{ fontSize: 14, marginTop: 4, marginBottom: 4 }}>
+      <div key={idx}>
+        <div
+          style={{
+            fontSize: 14,
+            marginTop: 4,
+            marginBottom: 4,
+            paddingLeft: 14,
+            fontWeight: "bold",
+            color: "#ea3838",
+          }}
+        >
           {item.hasError ? `command not found!` : undefined}
         </div>
         <Terminal

@@ -1,6 +1,4 @@
-# cmd
-
-## Environment setup
+# Environment setup
 
     make prepare-dev
 

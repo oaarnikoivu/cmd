@@ -23,7 +23,6 @@ export const Terminal: React.FC<TerminalProps> = ({
       <div>/</div>
       <div style={{ width: "100%" }}>
         <input
-          ref={(ref) => ref && ref.focus()}
           autoFocus
           disabled={disabled}
           style={{
@@ -36,12 +35,11 @@ export const Terminal: React.FC<TerminalProps> = ({
           placeholder=""
           value={value}
           onChange={onChange}
-          onFocus={(e) =>
-            e.currentTarget.setSelectionRange(
-              e.currentTarget.value.length,
-              e.currentTarget.value.length
-            )
-          }
+          onKeyDown={(event) => {
+            if (event.key === "ArrowUp") {
+              event.preventDefault();
+            }
+          }}
         />
       </div>
     </div>
