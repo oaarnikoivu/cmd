@@ -7,4 +7,7 @@ export enum Keywords {
   TOUCH = "touch",
   STATS = "stats",
   HELP = "help",
+  QUESTION = "?",
+  REMOVE = "rm",
+  EMPTY = "",
 }

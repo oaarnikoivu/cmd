@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Terminal } from "./components/Terminal/Terminal";
 import { useKeyPress } from "./hooks/useKeyPress";
 import { Keywords } from "./utils/keywords";
@@ -21,24 +21,39 @@ function App() {
   ]);
   const [clear, setClear] = useState<boolean>(false);
 
+  const removeElements = useCallback(() => {
+    if (clear) {
+      input.forEach((_, i: number) => {
+        let currentDiv = document.getElementById(`id-${i}`);
+        if (i !== input.length - 1) {
+          currentDiv?.remove();
+        } else {
+          setInput((input: Input[]) =>
+            input.map((item: Input, i: number) => {
+              if (i === input.length - 1) {
+                item.text = "";
+              }
+              return item;
+            })
+          );
+        }
+      });
+    }
+    setClear(false);
+  }, [clear, input]);
+
   useEffect(() => {
-    input.forEach((_, i: number) => {
-      let currentDiv = document.getElementById(`id-${i}`);
-      if (i !== input.length - 1) {
-        currentDiv?.remove();
-      } else {
-        setInput((input: Input[]) =>
-          input.map((item: Input, i: number) => {
-            if (i === input.length - 1) {
-              item.text = "";
-            }
-            return item;
-          })
-        );
+    removeElements();
+  }, [removeElements]);
+
+  useEffect(() => {
+    const handle = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.key === "l") {
+        setClear(true);
       }
-      setClear(false);
-    });
-  }, [clear]);
+    };
+    window.addEventListener("keydown", handle);
+  }, []);
 
   useEffect(() => {
     if (enterPressed) {
@@ -68,12 +83,14 @@ function App() {
         setIndex(input.length - 1 + 1);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enterPressed]);
 
   useEffect(() => {
     if (index > 0 && arrowUpPressed) {
       setIndex((i) => i - 1);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arrowUpPressed]);
 
   useEffect(() => {
