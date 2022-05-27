@@ -9,5 +9,6 @@ export enum Keywords {
   HELP = "help",
   QUESTION = "?",
   REMOVE = "rm",
+  RENAME = "rename",
   EMPTY = "",
 }

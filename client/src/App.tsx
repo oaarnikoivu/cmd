@@ -6,6 +6,7 @@ import { Keywords } from "./utils/keywords";
 interface Input {
   disabled: boolean;
   hasError: boolean;
+  dropdown?: boolean;
   text: string;
 }
 
@@ -17,7 +18,7 @@ function App() {
   const enterPressed = useKeyPress("Enter");
   const [index, setIndex] = useState<number>(0);
   const [input, setInput] = useState<Input[]>([
-    { disabled: false, hasError: false, text: "" },
+    { disabled: false, hasError: false, text: "", dropdown: false },
   ]);
   const [clear, setClear] = useState<boolean>(false);
 
@@ -66,6 +67,7 @@ function App() {
           input.map((item: Input, i: number) => {
             if (i === input.length - 1) {
               item.disabled = true;
+              item.dropdown = currentInput.text === Keywords.LS;
             }
             return item;
           })
@@ -77,6 +79,7 @@ function App() {
             hasError: !keywords.includes(
               old[old.length - 1].text.split(" ")[0]
             ),
+
             text: "",
           },
         ]);
@@ -129,7 +132,6 @@ function App() {
             fontSize: 14,
             marginTop: 4,
             marginBottom: 4,
-            paddingLeft: 14,
             fontWeight: "bold",
             color: "#ea3838",
           }}
@@ -142,6 +144,7 @@ function App() {
           disabled={item.disabled}
           hasError={false}
           onChange={handleInputChange}
+          showDropdown={item.dropdown}
         />
       </div>
     );
