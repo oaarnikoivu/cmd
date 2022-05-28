@@ -6,12 +6,14 @@ interface TerminalProps {
   hasError: boolean;
   disabled: boolean;
   showDropdown?: boolean;
+  currentDirectory: string;
 }
 
 export const Terminal: React.FC<TerminalProps> = ({
   value,
   disabled,
   showDropdown,
+  currentDirectory,
   onChange,
 }) => {
   return (
@@ -21,12 +23,19 @@ export const Terminal: React.FC<TerminalProps> = ({
           display: "flex",
           flexDirection: "row",
           gap: "4px",
-          alignItems: "center",
           width: "100%",
         }}
       >
-        <div style={{ fontSize: 14, color: "black", fontWeight: "bold" }}>
-          home :{" "}
+        <div
+          style={{
+            fontSize: 14,
+            color: "black",
+            fontWeight: "bold",
+            alignItems: "center",
+            // letterSpacing: "0.1rem",
+          }}
+        >
+          {currentDirectory} :{" "}
         </div>
         <div style={{ width: "80%" }}>
           <input
@@ -37,6 +46,8 @@ export const Terminal: React.FC<TerminalProps> = ({
               outline: "none",
               width: "100%",
               fontSize: 14,
+              alignItems: "center",
+              // letterSpacing: "0.1rem",
             }}
             type="text"
             placeholder=""

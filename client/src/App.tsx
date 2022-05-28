@@ -2,12 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Terminal } from "./components/Terminal/Terminal";
 import { useKeyPress } from "./hooks/useKeyPress";
 import { Keywords } from "./utils/keywords";
+import "@fontsource/anonymous-pro";
 
 interface Input {
   disabled: boolean;
   hasError: boolean;
   dropdown?: boolean;
   text: string;
+  directory: string;
 }
 
 const keywords: string[] = Object.values(Keywords);
@@ -18,7 +20,13 @@ function App() {
   const enterPressed = useKeyPress("Enter");
   const [index, setIndex] = useState<number>(0);
   const [input, setInput] = useState<Input[]>([
-    { disabled: false, hasError: false, text: "", dropdown: false },
+    {
+      disabled: false,
+      hasError: false,
+      text: "",
+      dropdown: false,
+      directory: "home",
+    },
   ]);
   const [clear, setClear] = useState<boolean>(false);
 
@@ -75,11 +83,14 @@ function App() {
         setInput((old: Input[]) => [
           ...old,
           {
+            directory:
+              currentInput.text.split(" ")[0] === Keywords.CD
+                ? currentInput.text.split(" ")[1].replace(/[^a-zA-Z0-9 ]/g, "")
+                : old[old.length - 1].directory.replace(/[^a-zA-Z0-9 ]/g, ""),
             disabled: false,
             hasError: !keywords.includes(
               old[old.length - 1].text.split(" ")[0]
             ),
-
             text: "",
           },
         ]);
@@ -141,6 +152,7 @@ function App() {
         <Terminal
           key={idx}
           value={item.text}
+          currentDirectory={item.directory}
           disabled={item.disabled}
           hasError={false}
           onChange={handleInputChange}

@@ -1178,6 +1178,16 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
+"@fontsource/anonymous-pro@^4.5.7":
+  version "4.5.7"
+  resolved "https://registry.yarnpkg.com/@fontsource/anonymous-pro/-/anonymous-pro-4.5.7.tgz#5594efeec4644787013c37db3d55b930eb4d6748"
+  integrity sha512-iFVa7ASxmt6VdPod4qRLojJJ9sKlsHs1RjtnwnFEgp3cpwLrZO3kHqD6DlCyzfO3ufOzIG3fcLZ2g/BSssHm8w==
+
+"@fontsource/inconsolata@^4.5.6":
+  version "4.5.6"
+  resolved "https://registry.yarnpkg.com/@fontsource/inconsolata/-/inconsolata-4.5.6.tgz#02fd076e9fc8eb8dbb4dbc70cb70031ef0e5ab32"
+  integrity sha512-aZH9zF9iEI6xS1xnYg7IKcGpkYRxAEiKc1239Dqdij488TDtI7uwdPSafgBFvVcbdLaIpYQdeBxrxxZH5ntemA==
+
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.9.5.tgz#2cbaf9a89460da24b5ca6531b8bbfc23e1df50c7"
