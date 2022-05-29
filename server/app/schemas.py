@@ -1,67 +1,19 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
-class TagBase(BaseModel):
-    tag: str
+class NodeBase(BaseModel):
+    name: str
+    parent: Optional[str] = None
 
 
-class TagCreate(TagBase):
+class NodeCreate(NodeBase):
     pass
 
 
-class Tag(TagBase):
+class Node(NodeBase):
     id: int
-    command_id: int
-
-    class Config:
-        orm_mode = True
-
-
-class CommandBase(BaseModel):
-    command: str
-
-
-class CommandCreate(CommandBase):
-    pass
-
-
-class Command(CommandBase):
-    id: int
-    tags: list[Tag] = []
-
-    class Config:
-        orm_mode = True
-
-
-class DirectoryBase(BaseModel):
-    title: str
-
-
-class DirectoryCreate(DirectoryBase):
-    pass
-
-
-class Directory(DirectoryBase):
-    id: int
-    links: list = []
-
-    class Config:
-        orm_mode = True
-
-    tag: str
-
-
-class LinkBase(BaseModel):
-    url: str
-
-
-class LinkCreate(LinkBase):
-    pass
-
-
-class Link(LinkBase):
-    id: int
-    directory_id: int
+    parent_id: Optional[int]
 
     class Config:
         orm_mode = True

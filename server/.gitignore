@@ -3,3 +3,4 @@ app.egg-info/
 *.db
 *.pyc
 .pytest_cache/
+.env
