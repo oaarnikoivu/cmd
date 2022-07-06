@@ -32,7 +32,7 @@ def get_db():
 def mkdir(node: schemas.NodeCreate, db: Session = Depends(get_db)):
     db_node = crud.get_node_by_name(db, name=node.name)
     if db_node:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Directory already exists!")
+        return db_node
     return crud.create_node(db=db, node=node)
 
 
@@ -48,3 +48,13 @@ def mksubdir(node: schemas.NodeCreate, db: Session = Depends(get_db)):
     if len(exists) != 0:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Directory already exists!")
     return crud.create_child(db=db, node=node, db_parent=db_parent)
+
+
+@app.post("/cd/", include_in_schema=False)
+@app.post("/cd", response_model=schemas.Node)
+def cd(current_node_id: int, db: Session = Depends(get_db)):
+    db_current_node = crud.get_node_by_id(db=db, id=current_node_id)
+    db_next_node = db.query(models.Node).filter(models.Node.parent_id == db_current_node.id).first()
+    if not db_next_node:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Directory not found!")
+    return db_next_node

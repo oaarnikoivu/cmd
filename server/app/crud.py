@@ -8,6 +8,10 @@ def get_node_by_name(db: Session, name: str):
     return db.query(models.Node).filter(models.Node.name == name).first()
 
 
+def get_node_by_id(db: Session, id: int):
+    return db.query(models.Node).filter(models.Node.id == id).first()
+
+
 def create_node(db: Session, node: schemas.NodeCreate):
     db_node = models.Node(name=node.name)
     db.add(db_node)

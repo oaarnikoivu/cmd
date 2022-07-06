@@ -30,6 +30,29 @@ function App() {
   ]);
   const [clear, setClear] = useState<boolean>(false);
 
+  // Create root directory if it doesn't exist
+  // Else cd root directory on initial render
+  useEffect(() => {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: "root" }),
+    };
+
+    fetch("http://127.0.0.1:8002/nodes/", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        setInput((input: Input[]) =>
+          input.map((item: Input, i: number) => {
+            if (i === input.length - 1) {
+              item.directory = data.name;
+            }
+            return item;
+          })
+        );
+      });
+  }, []);
+
   const removeElements = useCallback(() => {
     if (clear) {
       input.forEach((_, i: number) => {
